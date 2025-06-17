@@ -16,6 +16,8 @@ defmodule Backend.Application do
       # Start a worker by calling: Backend.Worker.start_link(arg)
       # {Backend.Worker, arg},
       # Start to serve requests, typically the last entry
+      # 🧠 追加: ETSを管理するGenServer
+      Backend.PlayerState,
       BackendWeb.Endpoint
     ]
 
