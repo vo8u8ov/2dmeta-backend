@@ -1,11 +1,16 @@
 defmodule BackendWeb.RoomChannel do
   use Phoenix.Channel
 
-  def join("room:" <> _room_id, _params, socket) do
+  # クライアントが join したときの処理
+  def join("room:lobby", _params, socket) do
+    IO.puts("✅ User joined room:lobby")
     {:ok, socket}
   end
 
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+  # move イベントを受け取ったときの処理
+  def handle_in("move", %{"id" => id, "x" => x, "y" => y}, socket) do
+    IO.inspect({:move_received, id, x, y})
+    broadcast!(socket, "move", %{"id" => id, "x" => x, "y" => y})
+    {:noreply, socket}
   end
 end
