@@ -22,7 +22,7 @@ config :backend, BackendWeb.Endpoint,
   live_view: [signing_salt: "EfibmV8+"]
 
 config :backend, :player_settings,
-  max_players: 20
+  max_players: 3
 
 # Configures the mailer
 #

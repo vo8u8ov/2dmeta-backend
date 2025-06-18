@@ -48,23 +48,6 @@ defmodule Backend.PlayerState do
     :ets.info(:players, :size)
   end
 
-  def find_free_position do
-    taken_positions =
-      get_all_players()
-      |> Map.values()
-      |> Enum.map(fn %{x: x, y: y} -> {x, y} end)
-
-    # 👇 上の方だけを使う（例：Y座標は 50〜250）
-    candidate_positions =
-      for x <- 100..800//100,
-          y <- 50..250//100,
-          do: {x, y}
-
-    Enum.find(candidate_positions, fn pos ->
-      not Enum.member?(taken_positions, pos)
-    end) || {100, 50} # fallback
-  end
-
   def remove_player(id) do
     :ets.delete(:players, id)
   end
