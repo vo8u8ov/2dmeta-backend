@@ -40,6 +40,10 @@ defmodule Backend.PlayerState do
     Enum.at(@avatars, idx)
   end
 
+  def count_players do
+    :ets.info(:players, :size)
+  end
+
   def remove_player(id) do
     :ets.delete(:players, id)
   end
