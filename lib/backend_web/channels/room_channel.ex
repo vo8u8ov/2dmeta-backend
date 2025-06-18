@@ -19,15 +19,15 @@ defmodule BackendWeb.RoomChannel do
   def handle_info(:after_join, socket) do
     id = socket.assigns.player_id
     avatar = PlayerState.pick_avatar(id)
-    PlayerState.update_player(id, 100, 100, avatar)
+
+    {x, y} = PlayerState.find_free_position()
+    PlayerState.update_player(id, x, y, avatar)
 
     players = PlayerState.get_all_players()
     push(socket, "me", %{id: id, avatar: avatar})
     push(socket, "sync_players", players)
 
-    # 🟢 新しい参加者を他のクライアントにも通知
-    broadcast!(socket, "player_joined", %{id: id, x: 100, y: 100, avatar: avatar})
-
+    broadcast!(socket, "player_joined", %{id: id, x: x, y: y, avatar: avatar})
     {:noreply, socket}
   end
 
