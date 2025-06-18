@@ -29,6 +29,8 @@ config :backend, BackendWeb.Endpoint,
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
 config :backend, Backend.Mailer, adapter: Swoosh.Adapters.Local
+config :backend, :player_settings,
+  max_players: 3
 
 # Configures Elixir's Logger
 config :logger, :console,
