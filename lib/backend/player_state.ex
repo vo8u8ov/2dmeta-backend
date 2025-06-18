@@ -14,7 +14,17 @@ defmodule Backend.PlayerState do
     "avatar9.png",
     "avatar10.png",
     "avatar11.png",
-    "avatar12.png"
+    "avatar12.png",
+    "avatar13.png",
+    "avatar14.png",
+    "avatar15.png",
+    "avatar16.png",
+    "avatar17.png",
+    "avatar18.png",
+    "avatar19.png",
+    "avatar20.png",
+    "avatar21.png",
+    "avatar22.png"
   ]
 
   def start_link(_), do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
