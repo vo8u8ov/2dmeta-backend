@@ -12,23 +12,32 @@ defmodule BackendWeb.RoomChannel do
 
   def handle_info(:after_join, socket) do
     id = socket.assigns.player_id
-    # 新規プレイヤーには初期座標＋絵文字を付与して保存
-    emoji = PlayerState.pick_emoji(id)
-    PlayerState.update_player(id, 100, 100, emoji)
+    avatar = PlayerState.pick_avatar(id)
+    PlayerState.update_player(id, 100, 100, avatar)
 
-    # 全員分の状態を pull
     players = PlayerState.get_all_players()
-    # 自分にも emoji を渡す
-    push(socket, "me", %{id: id, emoji: emoji})
+    push(socket, "me", %{id: id, avatar: avatar})
     push(socket, "sync_players", players)
+
+    # 🟢 新しい参加者を他のクライアントにも通知
+    broadcast!(socket, "player_joined", %{id: id, x: 100, y: 100, avatar: avatar})
+
     {:noreply, socket}
   end
 
   def handle_in("move", %{"x" => x, "y" => y, "id" => id}, socket) do
-    # 移動時には既に選ばれた絵文字を保持して再保存
-    emoji = PlayerState.pick_emoji(id)
-    PlayerState.update_player(id, x, y, emoji)
-    broadcast!(socket, "move", %{x: x, y: y, id: id, emoji: emoji})
+    avatar = PlayerState.pick_avatar(id)
+    PlayerState.update_player(id, x, y, avatar)
+    broadcast!(socket, "move", %{x: x, y: y, id: id, avatar: avatar})
     {:noreply, socket}
   end
+
+  def terminate(_reason, socket) do
+  id = socket.assigns.player_id
+  PlayerState.remove_player(id)
+
+  # 🟥 他のプレイヤーに通知
+  broadcast!(socket, "player_left", %{id: id})
+  :ok
+end
 end

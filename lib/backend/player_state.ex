@@ -2,7 +2,20 @@
 defmodule Backend.PlayerState do
   use GenServer
 
-  @emojis ["👾", "🤖", "👻", "🐱", "🧑‍💻"]
+  @avatars [
+    "avatar1.png",
+    "avatar2.png",
+    "avatar3.png",
+    "avatar4.png",
+    "avatar5.png",
+    "avatar6.png",
+    "avatar7.png",
+    "avatar8.png",
+    "avatar9.png",
+    "avatar10.png",
+    "avatar11.png",
+    "avatar12.png"
+  ]
 
   def start_link(_), do: GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
 
@@ -13,20 +26,21 @@ defmodule Backend.PlayerState do
 
   def get_all_players do
     :ets.tab2list(:players)
-    |> Enum.into(%{}, fn {id, %{x: x, y: y, emoji: emoji}} ->
-      {id, %{x: x, y: y, emoji: emoji}}
+    |> Enum.into(%{}, fn {id, %{x: x, y: y, avatar: avatar}} ->
+      {id, %{x: x, y: y, avatar: avatar}}
     end)
   end
 
-  # 初回 join 時と move 時の両方で使えるように arity を増やす
-  def update_player(id, x, y, emoji) do
-    :ets.insert(:players, {id, %{x: x, y: y, emoji: emoji}})
+  def update_player(id, x, y, avatar) do
+    :ets.insert(:players, {id, %{x: x, y: y, avatar: avatar}})
   end
 
-  # ID から絵文字を決めるヘルパー
-  def pick_emoji(id) do
-    # ハッシュ値を使って決定的に選ぶ例
-    idx = :erlang.phash2(id, length(@emojis))
-    Enum.at(@emojis, idx)
+  def pick_avatar(id) do
+    idx = :erlang.phash2(id, length(@avatars))
+    Enum.at(@avatars, idx)
+  end
+
+  def remove_player(id) do
+    :ets.delete(:players, id)
   end
 end
