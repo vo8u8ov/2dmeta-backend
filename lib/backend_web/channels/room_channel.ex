@@ -2,16 +2,12 @@
 defmodule BackendWeb.RoomChannel do
   use Phoenix.Channel
   alias Backend.PlayerState
-  @max_players 3
+
   def join("room:lobby", _params, socket) do
-    if PlayerState.count_players() >= @max_players do
-      {:error, %{reason: "room_full"}}
-    else
-      id = UUID.uuid4()
-      socket = assign(socket, :player_id, id)
-      send(self(), :after_join)
-      {:ok, socket}
-    end
+    id = UUID.uuid4()
+    socket = assign(socket, :player_id, id)
+    send(self(), :after_join)
+    {:ok, socket}
   end
 
   def handle_info(:after_join, socket) do
@@ -37,15 +33,11 @@ defmodule BackendWeb.RoomChannel do
   end
 
   def terminate(_reason, socket) do
-    case Map.get(socket.assigns, :player_id) do
-      nil ->
-        IO.puts("[terminate] No player_id found, skipping cleanup")
+  id = socket.assigns.player_id
+  PlayerState.remove_player(id)
 
-      id ->
-        IO.puts("[terminate] Cleaning up player: #{id}")
-        PlayerState.remove_player(id)
-    end
-
-    :ok
-  end
+  # 🟥 他のプレイヤーに通知
+  broadcast!(socket, "player_left", %{id: id})
+  :ok
+end
 end
