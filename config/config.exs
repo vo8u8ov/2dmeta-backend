@@ -21,6 +21,9 @@ config :backend, BackendWeb.Endpoint,
   pubsub_server: Backend.PubSub,
   live_view: [signing_salt: "EfibmV8+"]
 
+config :backend, :player_settings,
+  max_players: 3
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

@@ -24,6 +24,10 @@ defmodule Backend.PlayerState do
     {:ok, %{}}
   end
 
+  def max_players do
+    Application.get_env(:backend, :player_settings)[:max_players] || 10
+  end
+
   def get_all_players do
     :ets.tab2list(:players)
     |> Enum.into(%{}, fn {id, %{x: x, y: y, avatar: avatar}} ->
