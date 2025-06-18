@@ -2,12 +2,10 @@
 defmodule BackendWeb.RoomChannel do
   use Phoenix.Channel
   alias Backend.PlayerState
-
- def join("room:lobby", _params, socket) do
-    current_players = PlayerState.get_all_players() |> map_size()
-
-    if current_players >= PlayerState.max_players() do
-      {:error, %{reason: "room_full"}}  # ← 👈 ここが大事！
+  @max_players 3
+  def join("room:lobby", _params, socket) do
+    if PlayerState.count_players() >= @max_players do
+      {:error, %{reason: "room_full"}}
     else
       id = UUID.uuid4()
       socket = assign(socket, :player_id, id)
