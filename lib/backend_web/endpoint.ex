@@ -14,7 +14,7 @@ defmodule BackendWeb.Endpoint do
   socket "/socket", BackendWeb.UserSocket,
     websocket: true,
     longpoll: false
-    
+
   socket "/live", Phoenix.LiveView.Socket,
     websocket: [connect_info: [session: @session_options]],
     longpoll: [connect_info: [session: @session_options]]
@@ -51,4 +51,5 @@ defmodule BackendWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug BackendWeb.Router
+  plug CORSPlug, origin: ["https://2dmeta-frontend.vercel.app"]
 end
