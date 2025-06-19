@@ -11,3 +11,8 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+# ここから下を追加 👇
+config :backend, BackendWeb.Endpoint,
+  url: [host: "meta-2d.gigalixirapp.com", port: 443],
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  server: true
