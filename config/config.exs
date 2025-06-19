@@ -30,7 +30,7 @@ config :backend, BackendWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :backend, Backend.Mailer, adapter: Swoosh.Adapters.Local
 config :backend, :player_settings,
-  max_players: 3
+  max_players: 20
 
 # Configures Elixir's Logger
 config :logger, :console,
