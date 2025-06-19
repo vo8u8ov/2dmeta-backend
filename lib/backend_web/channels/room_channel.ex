@@ -39,6 +39,11 @@ defmodule BackendWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("compliment", %{"id" => id, "message" => message}, socket) do
+    broadcast!(socket, "compliment", %{"id" => id, "message" => message})
+    {:noreply, socket}
+  end
+
   def terminate(_reason, socket) do
     case Map.get(socket.assigns, :player_id) do
       nil ->
